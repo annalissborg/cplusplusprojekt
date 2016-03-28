@@ -29,6 +29,7 @@ void MessageHandler::decode(std::shared_ptr<Connection>& con){
 			cmd = con->read(); // 40 for string
 			findString(con);
 			title = fromFindString;
+
 			std::cout << "title: " << title << std::endl;
 
 			//databas stuff

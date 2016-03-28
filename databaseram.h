@@ -8,7 +8,7 @@ class DatabaseRAM : public Database {
 		std::string listArticles();
 		std::string getArticle();
 		void createNewsgroup(std::string title);
-		void deleteNewsgroup();
+		void deleteNewsgroup(int id);
 		void createArticle();
 		void deleteArticle();
 	private:
@@ -19,8 +19,9 @@ class DatabaseRAM : public Database {
 class Newsgroup {
 	public:
 		Newsgroup(std::string title, int id) : title(title), groupid(id) {}
+		~Newsgroup() {};
 		std::string getTitle() { return title; }
-
+		int getId() { return groupid; }
 	private:
 		std::string title;
 		int groupid;
