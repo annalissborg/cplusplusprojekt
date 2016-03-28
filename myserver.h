@@ -6,7 +6,7 @@
 #include "database.h"
 #include "databaseram.h"
 #include "messagehandler.h"
-
+class MessageHandler;
 
 class MyServer : public Server{
 public:

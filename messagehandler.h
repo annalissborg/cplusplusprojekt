@@ -1,7 +1,8 @@
-#ifndef MESSAGEHANDLER_H
-#define MESSAGEHANDLER_H
 #include "connection.h"
 #include "myserver.h"
+
+#ifndef MESSAGEHANDLER_H
+#define MESSAGEHANDLER_H
 
 class MessageHandler{
 public:
