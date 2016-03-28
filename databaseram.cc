@@ -35,6 +35,7 @@ void DatabaseRAM::deleteNewsgroup(int id) {
 DatabaseRAM::DatabaseRAM() {
 	nbrOfNews = 0;
 }
+/*
 int main() {
 
 	DatabaseRAM db;
@@ -46,4 +47,4 @@ int main() {
 	db.deleteNewsgroup(1);	
 	return 0;
 	
-}
+}*/
