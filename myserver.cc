@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include "databaseram.h"
 #include "myserver.h"
 #include "messagehandler.h"
 #include "protocol.h"

@@ -1,8 +1,9 @@
+#include "database.h"
+#include <vector>
+
 #ifndef DATABASERAM_H
 #define DATABASERAM_H
 
-#include "database.h"
-#include <vector>
 class Newsgroup;
 class DatabaseRAM : public Database {
 	public:
