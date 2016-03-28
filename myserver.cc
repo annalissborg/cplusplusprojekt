@@ -33,7 +33,6 @@ int main (int argc, char* argv[]){
 		std::cerr << "Server not ready" << std::endl;
 		exit(1);
 	}
-	MessageHandler message;
 	std::cout << "server is running" << std::endl;
 	while(true){
 		 auto con = server.waitForActivity();
@@ -64,15 +63,13 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 
 			std::cout << list.size() << std::endl;
 			for_each(list.begin(), list.end(), [] (Newsgroup* news) { std::cout << "size: " << news->getTitle().size() << "Title: " << news->getTitle() << std::endl;  });
-			//for_each(list.begin(), list.end(), [] (Newsgroup* news) { answer.append (news->getId().size(), news->getId()); answer.append (news->getTitle().size(), news->getTitle());  });
+
 
 			//creating the answer
-			answer.append(1, (unsigned char)Protocol::ANS_LIST_NG); 
-			answer.append(1, number); 
-
-			answer.append(1, (unsigned char)Protocol::ANS_END); 
-			//ser i wireshark 1,20,0,27,8 men 0 och 27 skickas i samma paket
-			sendResponse(answer, con);
+			message.sendChar((unsigned char) Protocol::ANS_LIST_NG, con); 
+		//	message.sendInt(number, con);
+			for(_each(list.begin(), list.end(), [answer, con] (Newsgroup* news) { message.sendInt(news->getId(), con); message.sendString(news->getTitle(), con) });)
+			message.sendChar((unsigned char) Protocol::ANS_END, con); 
 			break;
 
 		case Protocol::COM_CREATE_NG : //2
@@ -95,7 +92,7 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 			answer.append(1, (unsigned char)Protocol::ANS_CREATE_NG);
 			answer.append(1, (unsigned char)Protocol::ANS_ACK);
 			answer.append(1, (unsigned char)Protocol::ANS_END);
-			sendResponse(answer, con);
+			message.sendString(answer, con);
 			break;
 
 		case Protocol::COM_DELETE_NG : // 3
@@ -165,10 +162,5 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 	}
 
 
-	void MyServer::sendResponse(std::string answer, std::shared_ptr<Connection>& con){
-					//skicka svaret
-			for (char c : answer){
-				con->write(c);
-			}
-	}
+
 

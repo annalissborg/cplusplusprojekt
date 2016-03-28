@@ -5,6 +5,7 @@
 #include "connection.h"
 #include "database.h"
 #include "databaseram.h"
+#include "messagehandler.h"
 
 
 class MyServer : public Server{
@@ -19,7 +20,7 @@ private:
 	std::string fromFindString;
 	unsigned char cmd;
 	Database* database;
-
+	MessageHandler message;
 };
 
 #endif
