@@ -9,6 +9,8 @@
 
 struct Protocol {
 	enum {
+		ZERO = 0,
+
 		/* Command codes, client -> server */
 		COM_LIST_NG    = 1, // list newsgroups
 		COM_CREATE_NG  = 2, // create newsgroup

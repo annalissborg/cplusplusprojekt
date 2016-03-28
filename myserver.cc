@@ -5,12 +5,7 @@
 
 MyServer::MyServer(int port) : Server(port){}
 
-void MyServer::answer(std::shared_ptr<Connection> con, std::string& answer){
-	//skicka svaret
-	for (char c : answer){
-		con->write(c);
-	}
-}
+
 
 
 int main (int argc, char* argv[]){
@@ -36,7 +31,7 @@ int main (int argc, char* argv[]){
 	while(true){
 		auto con = server.waitForActivity();
 		if(con != nullptr){ // finns någon på denna connection
-			message.decode(con, server);
+			message.decode(con);
 		}else{ //skapa en ny connection
 			con = std::make_shared<Connection>();
 			server.registerConnection(con);

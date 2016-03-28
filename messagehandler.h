@@ -4,7 +4,8 @@
 class MessageHandler{
 public:
 	MessageHandler();
-	void decode(std::shared_ptr<Connection>& con, MyServer& server);
+	void decode(std::shared_ptr<Connection>& con);
 
 private:
+	void sendResponse(std::string answer, std::shared_ptr<Connection>& con);
 };
