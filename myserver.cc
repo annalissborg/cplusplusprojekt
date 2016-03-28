@@ -5,6 +5,7 @@
 #include "messagehandler.h"
 #include "protocol.h"
 #include <string>
+#include <algorithm>
 
 MyServer::MyServer(int port) : Server(port){
 	database = new DatabaseRAM();
@@ -62,14 +63,14 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 			std::cout << "list new group" << std::endl;
 
 			std::cout << list.size() << std::endl;
-
+			for_each(list.begin(), list.end(), [] (Newsgroup* news) { std::cout << news->getTitle() << std::endl;  });
 
 			answer.append(1, (unsigned char)Protocol::ANS_LIST_NG); 
 			//answer += " ";
 			answer.append(1, (unsigned char)Protocol::ZERO); 	
 			answer.append(1, (unsigned char)Protocol::ANS_END); 
 			//ser i wireshark 1,20,0,27,8 men 0 och 27 skickas i samma paket
-			//sendResponse(answer, con);
+			sendResponse(answer, con);
 			break;
 
 		case Protocol::COM_CREATE_NG : //2
