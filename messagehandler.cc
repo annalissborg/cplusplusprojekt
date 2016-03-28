@@ -31,13 +31,13 @@ void MessageHandler::decode(std::shared_ptr<Connection>& con){
 
 
 			cmd = con->read();
-			length = length ^ (std::atoi(&cmd) << 24);
+			std::cout << (int) cmd << " ";
 			cmd = con->read();
-			length = length ^ (std::atoi(&cmd) << 16);
+			std::cout << (int) cmd << " ";
 			cmd = con->read();
-			length = length ^ (std::atoi(&cmd) << 8);
+			std::cout << (int) cmd << " ";
 			cmd = con->read();
-			length = length ^ std::atoi(&cmd);
+			std::cout << (int) cmd << " ";
 			std::cout << "Length : " << length << std::endl;
 			while (length != 0){
 				-- length;

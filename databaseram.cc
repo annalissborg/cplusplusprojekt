@@ -23,20 +23,24 @@ void DatabaseRAM::createArticle() {
 void DatabaseRAM::deleteArticle() {
 }
 
-void DatabaseRAM::deleteNewsgroup() {
+void DatabaseRAM::deleteNewsgroup(int id) {
+	auto last = remove_if(newsgroups.begin(), newsgroups.end(), [id] (Newsgroup* news)->bool { if (id == news->getId()) { delete news; return true; } return false; } );
+	newsgroups.erase(last, newsgroups.end());
 }
 
 DatabaseRAM::DatabaseRAM() {
 	nbrOfNews = 0;
 }
-
+/*
 int main() {
 
 	DatabaseRAM db;
 	db.createNewsgroup("First");
 	db.createNewsgroup("Second");
 	std::vector<Newsgroup*> groups = db.getNewsgroups();
-	for_each(groups.begin(), groups.end(), [] (Newsgroup* news){ std::cout << news->getTitle() << std::endl;});
+	for_each(groups.begin(), groups.end(), [] (Newsgroup* news){ std::cout << news->getTitle() << " " << news->getId()  << std::endl;});
+	db.deleteNewsgroup(0);	
+	db.deleteNewsgroup(1);	
 	return 0;
 	
-}
+}*/
