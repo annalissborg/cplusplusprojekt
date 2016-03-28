@@ -1,3 +1,6 @@
+#ifndef DATABASERAM_H
+#define DATABASERAM_H
+
 #include "database.h"
 #include <vector>
 class Newsgroup;
@@ -9,7 +12,7 @@ class DatabaseRAM : public Database {
 		std::string getArticle();
 		void createNewsgroup(std::string title);
 		void deleteNewsgroup(int id);
-		void createArticle();
+		void createArticle(int groupid, std::string title, std::string author, std::string text);
 		void deleteArticle();
 	private:
 		std::vector<Newsgroup*> newsgroups;
@@ -22,7 +25,10 @@ class Newsgroup {
 		~Newsgroup() {};
 		std::string getTitle() { return title; }
 		int getId() { return groupid; }
+		void createArticle(std::string title, std::string author, std::string text);
 	private:
 		std::string title;
 		int groupid;
 };
+
+#endif
