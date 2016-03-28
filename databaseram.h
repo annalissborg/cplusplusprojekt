@@ -11,7 +11,7 @@ class DatabaseRAM : public Database {
 		std::vector<Newsgroup*> getNewsgroups();
 		std::string listArticles();
 		std::string getArticle();
-		void createNewsgroup(std::string title);
+		bool createNewsgroup(std::string title);
 		void deleteNewsgroup(int id);
 		void createArticle(int groupid, std::string title, std::string author, std::string text);
 		void deleteArticle();

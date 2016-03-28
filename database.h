@@ -7,7 +7,7 @@ class Newsgroup;
 class Database {
 	public:
 		virtual std::vector<Newsgroup*> getNewsgroups() = 0;
-		virtual void createNewsgroup(std::string title) = 0;
+		virtual bool createNewsgroup(std::string title) = 0;
 		virtual void deleteNewsgroup(int id) = 0;
 		virtual std::string listArticles() = 0;
 		virtual void createArticle(int groupid, std::string title, std::string author, std::string text)= 0;

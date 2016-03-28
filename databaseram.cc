@@ -15,7 +15,8 @@ std::string DatabaseRAM::getArticle() {
 	return NULL;
 }
 //Namn, något idnummer
-void DatabaseRAM::createNewsgroup(std::string title) {
+bool DatabaseRAM::createNewsgroup(std::string title) {
+	auto it = find_if(newsgroups.begin(), newsgroups.end(), [title] (Newsgroup* news) { return title.compare(news->getTitle()) == 0; } );
 	newsgroups.push_back(new Newsgroup(title, nbrOfNews++));
 }
 //Namn, id, author, text
@@ -38,7 +39,6 @@ DatabaseRAM::DatabaseRAM() {
 	nbrOfNews = 0;
 }
 
-/*
 int main() {
 
 	DatabaseRAM db;
@@ -51,4 +51,3 @@ int main() {
 	return 0;
 	
 }
-*/
