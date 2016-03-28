@@ -6,8 +6,6 @@
 #include "myserver.h"
 #include "messagehandler.h"
 #include "protocol.h"
-#include "databaseram.h"
-#include "database.h"
 
 
 MyServer::MyServer(int port) : Server(port){
@@ -50,7 +48,7 @@ int main (int argc, char* argv[]){
 
 void MyServer::decode(std::shared_ptr<Connection>& con){
 	cmd = con->read();
-	std::cout << (int)cmd << std::endl;
+	//std::cout << (int)cmd << std::endl;
 	std::string answer;
 	std::string title;
 	int number = 0;
@@ -64,10 +62,13 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 			std::cout <<"nbr of elements in list: " << list.size() << std::endl;
 			number = list.size();
 
+			std::cout << list.size() << std::endl;
+			for_each(list.begin(), list.end(), [] (Newsgroup* news) { std::cout << "size: " << news->getTitle().size() << "Title: " << news->getTitle() << std::endl;  });
+			//for_each(list.begin(), list.end(), [] (Newsgroup* news) { answer.append (news->getId().size(), news->getId()); answer.append (news->getTitle().size(), news->getTitle());  });
+
 			//creating the answer
 			answer.append(1, (unsigned char)Protocol::ANS_LIST_NG); 
 			answer.append(1, number); 
-			for_each(list.begin(), list.end(), [answer](Newsgroup* n){std::cout << n->getTitle() <<std::endl;});
 
 			answer.append(1, (unsigned char)Protocol::ANS_END); 
 			//ser i wireshark 1,20,0,27,8 men 0 och 27 skickas i samma paket
@@ -75,6 +76,7 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 			break;
 
 		case Protocol::COM_CREATE_NG : //2
+			answer = "";
 			std::cout << "create new group" << std::endl;
 			cmd = con->read(); // 40 for string
 			findString(con);
@@ -82,7 +84,18 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 			std::cout << "title: " << title << std::endl;
 			database->createNewsgroup(title);
 
-			//svara
+			/*if (answer.append(1, (unsigned char)Protocol::ANS_CREATE_NG)){
+				answer.append(1, (unsigned char)Protocol::ANS_ACK);
+
+			} else {
+				answer.append(1, (unsigned char)Protocol::ANS_NAK);
+				answer.append(1, (unsigned char)Protocol::ERR_NG_ALREADY_EXISTS;
+
+			}*/
+			answer.append(1, (unsigned char)Protocol::ANS_CREATE_NG);
+			answer.append(1, (unsigned char)Protocol::ANS_ACK);
+			answer.append(1, (unsigned char)Protocol::ANS_END);
+			sendResponse(answer, con);
 			break;
 
 		case Protocol::COM_DELETE_NG : // 3
