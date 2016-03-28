@@ -3,6 +3,8 @@
 #include "myserver.h"
 #include "messagehandler.h"
 #include "protocol.h"
+#include "databaseram.h"
+#include "database.h"
 #include <string>
 
 MyServer::MyServer(int port) : Server(port){
@@ -40,10 +42,6 @@ int main (int argc, char* argv[]){
 			con = std::make_shared<Connection>();
 			server.registerConnection(con);
 		}
-
-
-
-
 	}
 }
 
