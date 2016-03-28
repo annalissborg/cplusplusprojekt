@@ -3,6 +3,8 @@
 
 #include "server.h"
 #include "connection.h"
+#include "database.h"
+#include "databaseram.h"
 
 
 class MyServer : public Server{
@@ -16,6 +18,7 @@ private:
 	int findNumber(std::shared_ptr<Connection>& con);
 	std::string fromFindString;
 	unsigned char cmd;
+	Database* database;
 
 };
 

@@ -5,7 +5,9 @@
 #include "protocol.h"
 #include <string>
 
-MyServer::MyServer(int port) : Server(port){}
+MyServer::MyServer(int port) : Server(port){
+	database = new DatabaseRAM();
+}
 
 
 
@@ -51,41 +53,42 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 	std::string answer;
 	std::string title;
 	int number = 0;
+	auto list = database->getNewsgroups();
 
 
 	switch((int)cmd){
 		case Protocol::COM_LIST_NG : // 1
 			std::cout << "list new group" << std::endl;
+
+			std::cout << list.size() << std::endl;
+
+
 			answer.append(1, (unsigned char)Protocol::ANS_LIST_NG); 
 			//answer += " ";
 			answer.append(1, (unsigned char)Protocol::ZERO); 	
 			answer.append(1, (unsigned char)Protocol::ANS_END); 
 			//ser i wireshark 1,20,0,27,8 men 0 och 27 skickas i samma paket
-			sendResponse(answer, con);
+			//sendResponse(answer, con);
 			break;
 
 		case Protocol::COM_CREATE_NG : //2
 			std::cout << "create new group" << std::endl;
-
 			cmd = con->read(); // 40 for string
 			findString(con);
 			title = fromFindString;
-
 			std::cout << "title: " << title << std::endl;
+			database->createNewsgroup(title);
 
-			//databas stuff
-
-			//ser i wireshark då "anna" skickats 2,40,0,0,0,4,97,110,110,97,8
-
+			//svara
 			break;
 
 		case Protocol::COM_DELETE_NG : // 3
 			std::cout << "delete newsgroup" << std::endl;
 			cmd = con->read(); // 41 for number
-
 			number = findNumber(con);
+			database->deleteNewsgroup(number);
 
-			//databas stuff
+			//svara
 			break;
 
 		case Protocol::COM_LIST_ART : //4
