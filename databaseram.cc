@@ -8,9 +8,11 @@ std::vector<News*> DatabaseRAM::getNewsgroups() {
 
 
 std::string DatabaseRAM::listArticles() {
+	return NULL;
 }
 
 std::string DatabaseRAM::getArticle() {
+	return NULL;
 }
 //Namn, något idnummer
 bool DatabaseRAM::createNewsgroup(std::string title) {
@@ -18,6 +20,7 @@ bool DatabaseRAM::createNewsgroup(std::string title) {
 	if (!news)
 			return false;
 	newsgroups.push_back(new Newsgroup(title, nbrOfNews++));
+
 	return true;
 }
 //Namn, id, author, text
@@ -57,8 +60,11 @@ bool DatabaseRAM::deleteNewsgroup(int id) {
 DatabaseRAM::DatabaseRAM() {
 	nbrOfNews = 0;
 }
+/*
+=======
 
 
+>>>>>>> 7a847a440131fb1fb9d9455fb0c72ce3c94a7fd0
 int main() {
 
 	DatabaseRAM db;
@@ -70,4 +76,4 @@ int main() {
 	db.deleteNewsgroup(1);	
 	return 0;
 	
-}
+}*/

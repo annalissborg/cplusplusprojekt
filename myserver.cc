@@ -1,11 +1,12 @@
 #include <iostream>
 #include <cstdlib>
+#include <string>
+#include <algorithm>
 #include "databaseram.h"
 #include "myserver.h"
 #include "messagehandler.h"
 #include "protocol.h"
-#include <string>
-#include <algorithm>
+
 
 MyServer::MyServer(int port) : Server(port){
 	database = new DatabaseRAM();
@@ -32,7 +33,6 @@ int main (int argc, char* argv[]){
 		std::cerr << "Server not ready" << std::endl;
 		exit(1);
 	}
-	MessageHandler message;
 	std::cout << "server is running" << std::endl;
 	while(true){
 		 auto con = server.waitForActivity();
@@ -42,16 +42,12 @@ int main (int argc, char* argv[]){
 			con = std::make_shared<Connection>();
 			server.registerConnection(con);
 		}
-
-
-
-
 	}
 }
 
 void MyServer::decode(std::shared_ptr<Connection>& con){
 	cmd = con->read();
-	std::cout << (int)cmd << std::endl;
+	//std::cout << (int)cmd << std::endl;
 	std::string answer;
 	std::string title;
 	int number = 0;
@@ -62,18 +58,22 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 		case Protocol::COM_LIST_NG : // 1
 			std::cout << "list new group" << std::endl;
 
-			std::cout << list.size() << std::endl;
-			for_each(list.begin(), list.end(), [] (Newsgroup* news) { std::cout << news->getTitle() << std::endl;  });
+			std::cout <<"nbr of elements in list: " << list.size() << std::endl;
+			number = list.size();
 
-			answer.append(1, (unsigned char)Protocol::ANS_LIST_NG); 
-			//answer += " ";
-			answer.append(1, (unsigned char)Protocol::ZERO); 	
-			answer.append(1, (unsigned char)Protocol::ANS_END); 
-			//ser i wireshark 1,20,0,27,8 men 0 och 27 skickas i samma paket
-			sendResponse(answer, con);
+			std::cout << list.size() << std::endl;
+			for_each(list.begin(), list.end(), [] (Newsgroup* news) { std::cout << "size: " << news->getTitle().size() << "Title: " << news->getTitle() << std::endl;  });
+
+
+			//creating the answer
+			message.sendChar((unsigned char) Protocol::ANS_LIST_NG, con); 
+		//	message.sendInt(number, con);
+			for(_each(list.begin(), list.end(), [answer, con] (Newsgroup* news) { message.sendInt(news->getId(), con); message.sendString(news->getTitle(), con) });)
+			message.sendChar((unsigned char) Protocol::ANS_END, con); 
 			break;
 
 		case Protocol::COM_CREATE_NG : //2
+			answer = "";
 			std::cout << "create new group" << std::endl;
 			cmd = con->read(); // 40 for string
 			findString(con);
@@ -81,7 +81,18 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 			std::cout << "title: " << title << std::endl;
 			database->createNewsgroup(title);
 
-			//svara
+			/*if (answer.append(1, (unsigned char)Protocol::ANS_CREATE_NG)){
+				answer.append(1, (unsigned char)Protocol::ANS_ACK);
+
+			} else {
+				answer.append(1, (unsigned char)Protocol::ANS_NAK);
+				answer.append(1, (unsigned char)Protocol::ERR_NG_ALREADY_EXISTS;
+
+			}*/
+			answer.append(1, (unsigned char)Protocol::ANS_CREATE_NG);
+			answer.append(1, (unsigned char)Protocol::ANS_ACK);
+			answer.append(1, (unsigned char)Protocol::ANS_END);
+			message.sendString(answer, con);
 			break;
 
 		case Protocol::COM_DELETE_NG : // 3
@@ -140,25 +151,16 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 			int length = 0;
 			//ta ut längden
 			cmd = con->read();
-			std::cout << "cmd : " << (int)cmd << std::endl;
 			length = length ^ (cmd << 24);
 			cmd = con->read();
-			std::cout << "cmd : " << (int)cmd << std::endl;
 			length = length ^ (cmd << 16);
 			cmd = con->read();
-			std::cout << "cmd : " << (int)cmd << std::endl;
 			length = length ^ (cmd << 8);
 			cmd = con->read();
-			std::cout << "cmd : " << (int)cmd << std::endl;
 			length = length ^ cmd;
 			return length;
 	}
 
 
-	void MyServer::sendResponse(std::string answer, std::shared_ptr<Connection>& con){
-					//skicka svaret
-			for (char c : answer){
-				con->write(c);
-			}
-	}
+
 
