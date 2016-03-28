@@ -1,12 +1,14 @@
 #include <iostream>
 #include <cstdlib>
+#include <string>
+#include <algorithm>
 #include "databaseram.h"
 #include "myserver.h"
 #include "messagehandler.h"
 #include "protocol.h"
 #include "databaseram.h"
 #include "database.h"
-#include <string>
+
 
 MyServer::MyServer(int port) : Server(port){
 	database = new DatabaseRAM();
@@ -59,15 +61,17 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 		case Protocol::COM_LIST_NG : // 1
 			std::cout << "list new group" << std::endl;
 
-			std::cout << list.size() << std::endl;
+			std::cout <<"nbr of elements in list: " << list.size() << std::endl;
+			number = list.size();
 
-
+			//creating the answer
 			answer.append(1, (unsigned char)Protocol::ANS_LIST_NG); 
-			//answer += " ";
-			answer.append(1, (unsigned char)Protocol::ZERO); 	
+			answer.append(1, number); 
+			for_each(list.begin(), list.end(), [answer](Newsgroup* n){std::cout << n->getTitle() <<std::endl;});
+
 			answer.append(1, (unsigned char)Protocol::ANS_END); 
 			//ser i wireshark 1,20,0,27,8 men 0 och 27 skickas i samma paket
-			//sendResponse(answer, con);
+			sendResponse(answer, con);
 			break;
 
 		case Protocol::COM_CREATE_NG : //2
@@ -137,16 +141,12 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 			int length = 0;
 			//ta ut längden
 			cmd = con->read();
-			std::cout << "cmd : " << (int)cmd << std::endl;
 			length = length ^ (cmd << 24);
 			cmd = con->read();
-			std::cout << "cmd : " << (int)cmd << std::endl;
 			length = length ^ (cmd << 16);
 			cmd = con->read();
-			std::cout << "cmd : " << (int)cmd << std::endl;
 			length = length ^ (cmd << 8);
 			cmd = con->read();
-			std::cout << "cmd : " << (int)cmd << std::endl;
 			length = length ^ cmd;
 			return length;
 	}

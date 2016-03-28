@@ -8,9 +8,11 @@ std::vector<Newsgroup*> DatabaseRAM::getNewsgroups() {
 
 
 std::string DatabaseRAM::listArticles() {
+	return NULL;
 }
 
 std::string DatabaseRAM::getArticle() {
+	return NULL;
 }
 //Namn, något idnummer
 void DatabaseRAM::createNewsgroup(std::string title) {
