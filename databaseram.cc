@@ -18,6 +18,7 @@ std::string DatabaseRAM::getArticle() {
 bool DatabaseRAM::createNewsgroup(std::string title) {
 	auto it = find_if(newsgroups.begin(), newsgroups.end(), [title] (Newsgroup* news) { return title.compare(news->getTitle()) == 0; } );
 	newsgroups.push_back(new Newsgroup(title, nbrOfNews++));
+	
 }
 //Namn, id, author, text
 void DatabaseRAM::createArticle(int groupid, std::string title, std::string author, std::string text) {
@@ -38,7 +39,7 @@ void DatabaseRAM::deleteNewsgroup(int id) {
 DatabaseRAM::DatabaseRAM() {
 	nbrOfNews = 0;
 }
-
+/*
 int main() {
 
 	DatabaseRAM db;
@@ -50,4 +51,4 @@ int main() {
 	db.deleteNewsgroup(1);	
 	return 0;
 	
-}
+}*/
