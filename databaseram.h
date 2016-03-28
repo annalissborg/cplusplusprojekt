@@ -8,19 +8,21 @@ class Newsgroup;
 class DatabaseRAM : public Database {
 	public:
 		DatabaseRAM();
-		std::vector<Newsgroup*> getNewsgroups();
+		std::vector<News*> getNewsgroups();
 		std::string listArticles();
 		std::string getArticle();
 		bool createNewsgroup(std::string title);
-		void deleteNewsgroup(int id);
+		bool deleteNewsgroup(int id);
 		void createArticle(int groupid, std::string title, std::string author, std::string text);
-		void deleteArticle();
+		bool deleteArticle(int id);
+		News* getNewsgroup(int id);
+		News* getNewsgroup(std::string title);
 	private:
-		std::vector<Newsgroup*> newsgroups;
+		std::vector<News*> newsgroups;
 		int nbrOfNews;
 };
 
-class Newsgroup {
+class Newsgroup : public News{
 	public:
 		Newsgroup(std::string title, int id) : title(title), groupid(id) {}
 		~Newsgroup() {};
