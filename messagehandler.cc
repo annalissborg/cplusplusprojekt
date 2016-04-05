@@ -18,10 +18,10 @@ MessageHandler::MessageHandler(){}
 	}
 
 		void MessageHandler::sendInt(int answer,  std::shared_ptr<Connection>& con){
-				con->write((value >> 24) & 0xFF);
-				con->write((value >> 16) & 0xFF);
-				con->write((value >> 8) & 0xFF);
-				con->write((value & 0xFF);
+				con->write((answer >> 24) & 0xFF);
+				con->write((answer >> 16) & 0xFF);
+				con->write((answer >> 8) & 0xFF);
+				con->write(answer & 0xFF);
 
 					//skicka svaret
 	}
