@@ -52,6 +52,7 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 	std::string title;
 	int number = 0;
 	auto list = database->getNewsgroups();
+	auto listArticles = NULL;
 	bool success = false;
 
 
@@ -95,15 +96,26 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			std::cout << "number from findNumber is: " << number << std::endl;
 			database->deleteNewsgroup(number);
 
-			//svara
+			
 			break;
 
 		case Protocol::COM_LIST_ART : //4
 			std::cout << "list articles" << std::endl;
 			cmd = con->read(); // 41 for number
+			number = findNumber(con); // nummret till newsgroupen
+			listArticles = database->getArticles(number);
 
-			number = findNumber(con);
-			//databas stuff
+			// creating the answer
+			message.sendchar((unsigned char)Protocol::ANS_LIST_ART, con);
+
+			if(listArticles.size() != 0){
+				message.sendChar((unsigned char)Protocol::ANS_ACK, con);
+				for_each(listArticles.begin(), listArticles.end(), [this, con] (Articles* art) { message.sendChar((unsigned char)Protocol::PAR_NUM, con); message.sendInt(art->getId(), con); message.sendChar((unsigned char)Protocol::PAR_STRING, con); message.sendInt(art->getTitle().size(), con); message.sendString(art->getTitle(), con); });
+			}else{
+				message.sendChar((unsigned char)Protocol::ANS_NAK, con);
+				message.sendChar((unsigned char)Protocol::ERR_NG_DOES_NOT_EXIST, con);
+			}
+			message.sendChar((unsigned char)Protocol::ANS_END, con);
 			break;		
 
 		case Protocol::COM_CREATE_ART : //5
