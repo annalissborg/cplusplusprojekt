@@ -24,7 +24,7 @@ bool DatabaseRAM::createNewsgroup(std::string title) {
 }
 //Namn, id, author, text
 void Newsgroup::createArticle(std::string title, std::string author, std::string text) {
-	articles.push_back(new Article(title, author, text, ++nbrOfArticles);
+	articles.push_back(new Article(title, author, text, ++nbrOfArticles));
 }
 
 

@@ -50,6 +50,8 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 	std::cout << (int)cmd << std::endl;
 	std::string answer;
 	std::string title;
+	std::string author;
+	std::string text;
 	int number = 0;
 	auto list = database->getNewsgroups();
 	std::vector<Article*> listArt;
@@ -145,9 +147,33 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 
 		case Protocol::COM_CREATE_ART : //5
 			std::cout << "create article" << std::endl;
+			cmd = con->read(); // 41 for number
+			number = findNumber(con);
+
+			cmd = con->read(); // 42 for string
+			findString(con);
+			title = fromFindString;
+
+			cmd = con->read(); // 42 for string
+			findString(con);
+			author = fromFindString;
+
+			cmd = con->read(); // 42 for string
+			findString(con);
+			text = fromFindString;
 			
-			
-			//databas stuff
+			//create answer
+			newsGroup = database->getNewsgroup(number);
+
+			message.sendChar((unsigned char)Protocol::ANS_CREATE_ART, con);
+			if(newsGroup != nullptr){
+				newsGroup->createArticle(title, author, text);
+				message.sendChar((unsigned char)Protocol::ANS_ACK, con);
+			}else{
+				message.sendChar((unsigned char)Protocol::ANS_NAK, con);
+				message.sendChar((unsigned char)Protocol::ERR_NG_DOES_NOT_EXIST, con);
+			}
+			message.sendChar((unsigned char)Protocol::ANS_END, con);
 			break;
 
 
