@@ -7,9 +7,9 @@
 class MessageHandler{
 public:
 	MessageHandler();
-	void sendInt(int answer,  std::shared_ptr<Connection>& con);
-	void sendChar(char c,  std::shared_ptr<Connection>& con);
-	void sendString(std::string answer,  std::shared_ptr<Connection>& con);
+	void sendInt(int answer,  const std::shared_ptr<Connection>& con);
+	void sendChar(char c,  const std::shared_ptr<Connection>& con);
+	void sendString(std::string answer,  const std::shared_ptr<Connection>& con);
 
 private:
 

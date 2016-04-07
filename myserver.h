@@ -11,12 +11,12 @@ class MessageHandler;
 class MyServer : public Server{
 public:
 	MyServer(int port);
-	void decode(std::shared_ptr<Connection>& con);
+	void decode(const std::shared_ptr<Connection>& con);
 
 private:
-	void sendResponse(std::string answer, std::shared_ptr<Connection>& con);
-	void findString(std::shared_ptr<Connection>& con);
-	int findNumber(std::shared_ptr<Connection>& con);
+	void sendResponse(std::string answer, const std::shared_ptr<Connection>& con);
+	void findString(const std::shared_ptr<Connection>& con);
+	int findNumber(const std::shared_ptr<Connection>& con);
 	std::string fromFindString;
 	unsigned char cmd;
 	Database* database;

@@ -45,7 +45,7 @@ int main (int argc, char* argv[]){
 	}
 }
 
-void MyServer::decode(std::shared_ptr<Connection>& con){
+void MyServer::decode(const std::shared_ptr<Connection>& con){
 	cmd = con->read();
 	//std::cout << (int)cmd << std::endl;
 	std::string answer;
@@ -68,8 +68,8 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 
 			//creating the answer
 			message.sendChar((unsigned char) Protocol::ANS_LIST_NG, con); 
-			//message.sendInt(number, con);
-			//for_each(list.begin(), list.end(), [message, con] (Newsgroup* news) { message.sendInt(news->getId(), con); message.sendString(news->getTitle(), con) });
+			message.sendInt(number, con);
+			for_each(list.begin(), list.end(), [this, con] (News* news) { message.sendInt(news->getId(), con); message.sendString(news->getTitle(), con); });
 			message.sendChar((unsigned char) Protocol::ANS_END, con); 
 			break;
 
@@ -137,7 +137,7 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 	}
 }
 
-	void MyServer::findString(std::shared_ptr<Connection>& con){
+	void MyServer::findString(const std::shared_ptr<Connection>& con){
 			fromFindString = "";
 			int length = findNumber(con);
 
@@ -148,7 +148,7 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 			}
 	}
 
-	int MyServer::findNumber(std::shared_ptr<Connection>& con){
+	int MyServer::findNumber(const std::shared_ptr<Connection>& con){
 			int length = 0;
 			//ta ut längden
 			cmd = con->read();
