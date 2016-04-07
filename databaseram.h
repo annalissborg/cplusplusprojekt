@@ -4,25 +4,27 @@
 #ifndef DATABASERAM_H
 #define DATABASERAM_H
 
+
+
 class Newsgroup : public News{
 	public:
 		Newsgroup(std::string title, int id) : title(title), groupid(id) {}
-		~Newsgroup() {};
+		~Newsgroup();
 		std::string getTitle() { return title; }
 		int getId() { return groupid; }
 		void createArticle(std::string title, std::string author, std::string text);
 		bool deleteArticle(int id);
+		std::vector<Article*> listArticles();
 	private:
 		std::string title;
 		int groupid;
+		std::vector<Article*> articles;
 };
 
 class DatabaseRAM : public Database {
 	public:
 		DatabaseRAM();
 		std::vector<News*> getNewsgroups();
-		std::string listArticles();
-		std::string getArticle();
 		bool createNewsgroup(std::string title);
 		bool deleteNewsgroup(int id);
 		News* getNewsgroup(int id);

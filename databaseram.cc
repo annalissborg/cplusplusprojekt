@@ -7,13 +7,12 @@ std::vector<News*> DatabaseRAM::getNewsgroups() {
 }
 
 
-std::string DatabaseRAM::listArticles() {
-	return NULL;
+std::vector<Article*> Newsgroup::listArticles() {
+	return articles;
 }
 
-std::string DatabaseRAM::getArticle() {
-	return NULL;
-}
+
+
 //Namn, något idnummer
 bool DatabaseRAM::createNewsgroup(std::string title) {
 	News* news = getNewsgroup(title);
@@ -32,6 +31,9 @@ bool Newsgroup::deleteArticle(int id) {
 //	auto last = remove_if(newsgroups.begin(), newsgroups.end(), [id] (News* news)->bool { if (id == news->getId()) { delete news; return true; } return false; } );
 //	newsgroups.erase(last, newsgroups.end());
 	return true;
+}
+
+Newsgroup::~Newsgroup() {
 }
 
 News* DatabaseRAM::getNewsgroup(std::string title) {
@@ -58,15 +60,18 @@ DatabaseRAM::DatabaseRAM() {
 	nbrOfNews = 0;
 }
 
+News::~News() {}
+
+
+
 /*
 int main() {
 
 	DatabaseRAM db;
 	db.createNewsgroup("First");
 	db.createNewsgroup("Second");
+	db.deleteNewsgroup(1);
 	std::vector<News*> groups = db.getNewsgroups();
-	db.deleteNewsgroup(0);	
-	db.deleteNewsgroup(1);	
 	return 0;
 	
 }*/
