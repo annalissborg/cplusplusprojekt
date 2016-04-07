@@ -24,13 +24,13 @@ bool DatabaseRAM::createNewsgroup(std::string title) {
 	return true;
 }
 //Namn, id, author, text
-void DatabaseRAM::createArticle(int groupid, std::string title, std::string author, std::string text) {
-	for_each (newsgroups.begin(), newsgroups.end(), [groupid, title, author, text] (News* news) { if (groupid == news->getId()) news->createArticle(title, author, text); } );
+void Newsgroup::createArticle(std::string title, std::string author, std::string text) {
+	//for_each (newsgroups.begin(), newsgroups.end(), [groupid, title, author, text] (News* news) { if (groupid == news->getId()) news->createArticle(title, author, text); } );
 }
 
-bool DatabaseRAM::deleteArticle(int id) {
-	auto last = remove_if(newsgroups.begin(), newsgroups.end(), [id] (News* news)->bool { if (id == news->getId()) { delete news; return true; } return false; } );
-	newsgroups.erase(last, newsgroups.end());
+bool Newsgroup::deleteArticle(int id) {
+//	auto last = remove_if(newsgroups.begin(), newsgroups.end(), [id] (News* news)->bool { if (id == news->getId()) { delete news; return true; } return false; } );
+//	newsgroups.erase(last, newsgroups.end());
 	return true;
 }
 
@@ -45,9 +45,6 @@ News* DatabaseRAM::getNewsgroup(int id) {
 	if (it != newsgroups.end())
 		return *it;
 	return nullptr;
-}
-
-void Newsgroup::createArticle(std::string title, std::string author, std::string text){
 }
 
 bool DatabaseRAM::deleteNewsgroup(int id) {
