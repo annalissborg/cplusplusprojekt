@@ -12,7 +12,7 @@ std::vector<Article*> Newsgroup::getArticles() {
 }
 
 Article* Newsgroup::getArticle(int id) {
-	auto it = find_if(articles.begin(), articles.end(), [id] (Article* art) { return art->getId() == 0; } );
+	auto it = find_if(articles.begin(), articles.end(), [id] (Article* art) { return art->getId() == id; } );
 	if (it != articles.end())
 		return *it;
 	return nullptr;
@@ -34,9 +34,12 @@ void Newsgroup::createArticle(std::string title, std::string author, std::string
 
 
 bool Newsgroup::deleteArticle(int id) {
-	auto last = remove_if(articles.begin(), articles.end(), [id] (Article* art)->bool { if (id == art->getId()) { delete art; return true; } return false; } );
+	std::cout << "I delete article" << std::endl;
+	int size = articles.size();
+	auto last = remove_if(articles.begin(), articles.end(), [id] (Article* art)->bool { if (id == art->getId()) {  return true; } return false; } );
 	articles.erase(last, articles.end());
-	return true;
+	std::cout << "Klar i delete article" << std::endl;
+	return size == articles.size();
 }
 
 Newsgroup::~Newsgroup() {
