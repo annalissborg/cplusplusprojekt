@@ -105,12 +105,12 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			cmd = con->read(); // 41 for number
 			number = findNumber(con); // nummret till newsgroupen
 			newsGroup = database->getNewsgroup(number);
-			listArt = newsGroup->getArticles();
 
 			// creating the answer
 			message.sendChar((unsigned char)Protocol::ANS_LIST_ART, con);
 
-			if(listArt.size() != 0){
+			if(newsGroup != nullptr){
+				listArt = newsGroup->getArticles();
 				message.sendChar((unsigned char)Protocol::ANS_ACK, con);
 				for_each(listArt.begin(), listArt.end(), [this, con] (Article* art) { message.sendChar((unsigned char)Protocol::PAR_NUM, con); message.sendInt(art->getId(), con); message.sendChar((unsigned char)Protocol::PAR_STRING, con); message.sendInt(art->getTitle().size(), con); message.sendString(art->getTitle(), con); });
 			}else{
