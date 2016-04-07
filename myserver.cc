@@ -60,6 +60,7 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 
 			std::cout <<"nbr of elements in list: " << list.size() << std::endl;
 			number = list.size();
+			std::cout << "number is: " << number << std::endl;
 
 			std::cout << list.size() << std::endl;
 			//for_each(list.begin(), list.end(), [] (Newsgroup* news) { std::cout << "size: " << news->getTitle().size() << "Title: " << news->getTitle() << std::endl;  });
@@ -67,8 +68,8 @@ void MyServer::decode(std::shared_ptr<Connection>& con){
 
 			//creating the answer
 			message.sendChar((unsigned char) Protocol::ANS_LIST_NG, con); 
-		//	message.sendInt(number, con);
-//			for_each(list.begin(), list.end(), [message, con] (Newsgroup* news) { message.sendInt(news->getId(), con); message.sendString(news->getTitle(), con) });
+			//message.sendInt(number, con);
+			//for_each(list.begin(), list.end(), [message, con] (Newsgroup* news) { message.sendInt(news->getId(), con); message.sendString(news->getTitle(), con) });
 			message.sendChar((unsigned char) Protocol::ANS_END, con); 
 			break;
 

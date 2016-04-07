@@ -20,7 +20,6 @@ bool DatabaseRAM::createNewsgroup(std::string title) {
 	if (!news)
 			return false;
 	newsgroups.push_back(new Newsgroup(title, nbrOfNews++));
-
 	return true;
 }
 //Namn, id, author, text
