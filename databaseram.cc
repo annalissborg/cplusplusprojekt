@@ -34,12 +34,10 @@ void Newsgroup::createArticle(std::string title, std::string author, std::string
 
 
 bool Newsgroup::deleteArticle(int id) {
-	std::cout << "I delete article" << std::endl;
 	int size = articles.size();
 	auto last = remove_if(articles.begin(), articles.end(), [id] (Article* art)->bool { if (id == art->getId()) {  return true; } return false; } );
 	articles.erase(last, articles.end());
-	std::cout << "Klar i delete article" << std::endl;
-	return size == articles.size();
+	return size != articles.size();
 }
 
 Newsgroup::~Newsgroup() {
