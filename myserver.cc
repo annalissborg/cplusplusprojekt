@@ -158,27 +158,34 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			std::cout << "create article" << std::endl;
 			cmd = con->read(); // 41 for number
 			number = findNumber(con);
+				std::cout << "Creating article" << std::endl;
 
 			cmd = con->read(); // 42 for string
 			findString(con);
 			title = fromFindString;
+				std::cout << "Creating article" << std::endl;
 
 			cmd = con->read(); // 42 for string
 			findString(con);
 			author = fromFindString;
+				std::cout << "Creating article" << std::endl;
 
 			cmd = con->read(); // 42 for string
 			findString(con);
 			text = fromFindString;
+				std::cout << "Creating article" << std::endl;
 			
 			//create answer
 			newsGroup = database->getNewsgroup(number);
 
 			message.sendChar((unsigned char)Protocol::ANS_CREATE_ART, con);
 			if(newsGroup != nullptr){
+				std::cout << "Creating article" << std::endl;
 				newsGroup->createArticle(title, author, text);
+				std::cout << "Kommer förbi createArticle loopen" << std::endl;
 				message.sendChar((unsigned char)Protocol::ANS_ACK, con);
 			}else{
+				std::cout << "Couldn't create article" << std::endl;
 				message.sendChar((unsigned char)Protocol::ANS_NAK, con);
 				message.sendChar((unsigned char)Protocol::ERR_NG_DOES_NOT_EXIST, con);
 			}
