@@ -18,6 +18,7 @@ class Newsgroup : public News{
 	private:
 		std::string title;
 		int groupid;
+		int nbrOfArticles;
 		std::vector<Article*> articles;
 };
 
