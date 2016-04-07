@@ -144,6 +144,8 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			if(newsGroup != nullptr){
 				listArt = newsGroup->getArticles();
 				message.sendChar((unsigned char)Protocol::ANS_ACK, con);
+				message.sendChar((unsigned char)Protocol::PAR_NUM, con);
+				message.sendInt(listArt.size(), con);
 				for_each(listArt.begin(), listArt.end(), [this, con] (Article* art) { message.sendChar((unsigned char)Protocol::PAR_NUM, con); message.sendInt(art->getId(), con); message.sendChar((unsigned char)Protocol::PAR_STRING, con); message.sendInt(art->getTitle().size(), con); message.sendString(art->getTitle(), con); });
 			}else{
 				message.sendChar((unsigned char)Protocol::ANS_NAK, con);
