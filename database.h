@@ -28,7 +28,7 @@ class News {
 		virtual int getId() = 0;
 		virtual void createArticle(std::string title, std::string author, std::string text) = 0;
 		virtual bool deleteArticle(int id) = 0;
-		virtual std::vector<Article*> listArticles() = 0;
+		virtual std::vector<Article*> getArticles() = 0;
 };
 
 

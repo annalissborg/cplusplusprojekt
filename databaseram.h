@@ -14,7 +14,7 @@ class Newsgroup : public News{
 		int getId() { return groupid; }
 		void createArticle(std::string title, std::string author, std::string text);
 		bool deleteArticle(int id);
-		std::vector<Article*> listArticles();
+		std::vector<Article*> getArticles();
 	private:
 		std::string title;
 		int groupid;

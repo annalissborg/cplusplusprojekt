@@ -52,7 +52,7 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 	std::string title;
 	int number = 0;
 	auto list = database->getNewsgroups();
-	auto listArticles = NULL;
+	std::vector<Article*> listArt;
 	bool success = false;
 	News* newsGroup; 
 
@@ -105,14 +105,14 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			cmd = con->read(); // 41 for number
 			number = findNumber(con); // nummret till newsgroupen
 			newsGroup = database->getNewsgroup(number);
-			listArticles = newsGroup->getArticles();
+			listArt = newsGroup->getArticles();
 
 			// creating the answer
-			message.sendchar((unsigned char)Protocol::ANS_LIST_ART, con);
+			message.sendChar((unsigned char)Protocol::ANS_LIST_ART, con);
 
-			if(listArticles.size() != 0){
+			if(listArt.size() != 0){
 				message.sendChar((unsigned char)Protocol::ANS_ACK, con);
-				for_each(listArticles.begin(), listArticles.end(), [this, con] (Articles* art) { message.sendChar((unsigned char)Protocol::PAR_NUM, con); message.sendInt(art->getId(), con); message.sendChar((unsigned char)Protocol::PAR_STRING, con); message.sendInt(art->getTitle().size(), con); message.sendString(art->getTitle(), con); });
+				for_each(listArt.begin(), listArt.end(), [this, con] (Article* art) { message.sendChar((unsigned char)Protocol::PAR_NUM, con); message.sendInt(art->getId(), con); message.sendChar((unsigned char)Protocol::PAR_STRING, con); message.sendInt(art->getTitle().size(), con); message.sendString(art->getTitle(), con); });
 			}else{
 				message.sendChar((unsigned char)Protocol::ANS_NAK, con);
 				message.sendChar((unsigned char)Protocol::ERR_NG_DOES_NOT_EXIST, con);

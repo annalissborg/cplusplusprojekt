@@ -7,7 +7,7 @@ std::vector<News*> DatabaseRAM::getNewsgroups() {
 }
 
 
-std::vector<Article*> Newsgroup::listArticles() {
+std::vector<Article*> Newsgroup::getArticles() {
 	return articles;
 }
 
