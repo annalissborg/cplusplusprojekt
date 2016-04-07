@@ -71,6 +71,10 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			message.sendChar((unsigned char) Protocol::ANS_END, con); 
 			break;
 
+
+
+
+
 		case Protocol::COM_CREATE_NG : //2
 			answer = "";
 			std::cout << "create new group" << std::endl;
@@ -90,15 +94,30 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			message.sendChar((unsigned char)Protocol::ANS_END, con);
 			break;
 
+
+
+
+
 		case Protocol::COM_DELETE_NG : // 3
 			std::cout << "delete newsgroup" << std::endl;
 			cmd = con->read(); // 41 for number
 			number = findNumber(con);
 			std::cout << "number from findNumber is: " << number << std::endl;
-			database->deleteNewsgroup(number);
+			success = database->deleteNewsgroup(number);
 
-			
+			//create answer
+			message.sendChar((unsigned char)Protocol::ANS_DELETE_NG, con);
+			if(success){
+				message.sendChar((unsigned char)Protocol::ANS_ACK, con);
+			}else{
+				message.sendChar((unsigned char)Protocol::ANS_NAK, con);
+				message.sendChar((unsigned char)Protocol::ERR_NG_DOES_NOT_EXIST, con);
+			}
+			message.sendChar((unsigned char)Protocol::ANS_END, con);
 			break;
+
+
+
 
 		case Protocol::COM_LIST_ART : //4
 			std::cout << "list articles" << std::endl;
@@ -120,6 +139,10 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			message.sendChar((unsigned char)Protocol::ANS_END, con);
 			break;		
 
+
+
+
+
 		case Protocol::COM_CREATE_ART : //5
 			std::cout << "create article" << std::endl;
 			
@@ -127,15 +150,26 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			//databas stuff
 			break;
 
+
+
+
 		case Protocol::COM_DELETE_ART : 
 			std::cout << "delete article" << std::endl;
 			//databas stuff
 			break;		
 
+
+
+
+
 		case Protocol::COM_GET_ART : 
 			std::cout << "get article" << std::endl;
 			//databas stuff
 			break;
+
+
+
+
 
 		case Protocol::COM_END : 
 			std::cout << "command end" << std::endl;
