@@ -1,4 +1,5 @@
 #include <vector>
+#include <string>
 
 #ifndef DATABASE_H
 #define DATABASE_H
