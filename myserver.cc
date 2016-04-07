@@ -52,6 +52,7 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 	std::string title;
 	int number = 0;
 	auto list = database->getNewsgroups();
+	bool success = false;
 
 
 	switch((int)cmd){
@@ -73,8 +74,6 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			for_each(list.begin(), list.end(), [this, con] (News* news) { message.sendChar((unsigned char)Protocol::PAR_NUM, con); message.sendInt(news->getId(), con); message.sendChar((unsigned char)Protocol::PAR_STRING, con); message.sendInt(news->getTitle().size(), con); message.sendString(news->getTitle(), con); });
 			message.sendChar((unsigned char) Protocol::ANS_END, con); 
 			break;
-			// Detta skickades i wireshark
-			// 20, 0001, 0001, A, n, nna. , 8
 
 		case Protocol::COM_CREATE_NG : //2
 			answer = "";
@@ -83,20 +82,16 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			findString(con);
 			title = fromFindString;
 			std::cout << "title: " << title << std::endl;
-			database->createNewsgroup(title);
+			success = database->createNewsgroup(title);
 
-			/*if (answer.append(1, (unsigned char)Protocol::ANS_CREATE_NG)){
-				answer.append(1, (unsigned char)Protocol::ANS_ACK);
-
+			message.sendChar((unsigned char)Protocol::ANS_CREATE_NG, con);
+			if (success){
+				message.sendChar((unsigned char)Protocol::ANS_ACK, con);
 			} else {
-				answer.append(1, (unsigned char)Protocol::ANS_NAK);
-				answer.append(1, (unsigned char)Protocol::ERR_NG_ALREADY_EXISTS;
-
-			}*/
-			answer.append(1, (unsigned char)Protocol::ANS_CREATE_NG);
-			answer.append(1, (unsigned char)Protocol::ANS_ACK);
-			answer.append(1, (unsigned char)Protocol::ANS_END);
-			message.sendString(answer, con);
+				message.sendChar((unsigned char)Protocol::ANS_NAK, con);
+				message.sendChar((unsigned char)Protocol::ERR_NG_ALREADY_EXISTS, con);
+			}
+			message.sendChar((unsigned char)Protocol::ANS_END, con);
 			break;
 
 		case Protocol::COM_DELETE_NG : // 3
