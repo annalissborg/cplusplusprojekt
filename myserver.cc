@@ -6,6 +6,7 @@
 #include "myserver.h"
 #include "messagehandler.h"
 #include "protocol.h"
+#include "connectionclosedexception.h"
 
 
 MyServer::MyServer(int port) : Server(port){
@@ -46,7 +47,15 @@ int main (int argc, char* argv[]){
 }
 
 void MyServer::decode(const std::shared_ptr<Connection>& con){
-	cmd = con->read();
+	int status = 0;
+	try {
+		cmd = con->read();
+	}
+	catch(ConnectionClosedException& e) {
+		deregisterConnection(con);
+		status = -1;
+	}
+	if (status >= 0) {
 	std::cout << (int)cmd << std::endl;
 	std::string answer;
 	std::string title;
@@ -175,6 +184,7 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			std::cout << "command end" << std::endl;
 			//databas stuff
 			break;
+	}
 	}
 }
 

@@ -4,6 +4,8 @@
 Article::Article  (std::string title, std::string author, std::string text, int id) : title(title), author(author), text(text), id(id) {
 }
 
+Article::~Article() {}
+
 std::string Article::getText() {
 	return text;
 }

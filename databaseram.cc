@@ -13,7 +13,6 @@ std::vector<Article*> Newsgroup::getArticles() {
 
 
 
-//Namn, något idnummer
 bool DatabaseRAM::createNewsgroup(std::string title) {
 	News* news = getNewsgroup(title);
 	if (news != nullptr) {
@@ -24,13 +23,13 @@ bool DatabaseRAM::createNewsgroup(std::string title) {
 }
 //Namn, id, author, text
 void Newsgroup::createArticle(std::string title, std::string author, std::string text) {
-	articles.push_back(new Article(title, author, text, ++nbrOfArticles);
+	articles.push_back(new Article(title, author, text, ++nbrOfArticles));
 }
 
 
 bool Newsgroup::deleteArticle(int id) {
-//	auto last = remove_if(newsgroups.begin(), newsgroups.end(), [id] (News* news)->bool { if (id == news->getId()) { delete news; return true; } return false; } );
-//	newsgroups.erase(last, newsgroups.end());
+	auto last = remove_if(articles.begin(), articles.end(), [id] (Article* art)->bool { if (id == art->getId()) { delete art; return true; } return false; } );
+	articles.erase(last, articles.end());
 	return true;
 }
 
