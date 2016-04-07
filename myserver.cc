@@ -68,10 +68,13 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 
 			//creating the answer
 			message.sendChar((unsigned char) Protocol::ANS_LIST_NG, con); 
+			message.sendChar((unsigned char) Protocol::PAR_NUM, con);
 			message.sendInt(number, con);
-			for_each(list.begin(), list.end(), [this, con] (News* news) { message.sendInt(news->getId(), con); message.sendString(news->getTitle(), con); });
+			for_each(list.begin(), list.end(), [this, con] (News* news) { message.sendChar((unsigned char)Protocol::PAR_NUM, con); message.sendInt(news->getId(), con); message.sendChar((unsigned char)Protocol::PAR_STRING, con); message.sendInt(news->getTitle().size(), con); message.sendString(news->getTitle(), con); });
 			message.sendChar((unsigned char) Protocol::ANS_END, con); 
 			break;
+			// Detta skickades i wireshark
+			// 20, 0001, 0001, A, n, nna. , 8
 
 		case Protocol::COM_CREATE_NG : //2
 			answer = "";

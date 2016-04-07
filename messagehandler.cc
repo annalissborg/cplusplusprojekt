@@ -7,6 +7,7 @@ MessageHandler::MessageHandler(){}
 
 	void MessageHandler::sendString(std::string answer,  const std::shared_ptr<Connection>& con){
 					//skicka svaret
+			std::cout << "sendString" << std::endl;
 			for (char c : answer){
 				con->write(c);
 			}
@@ -14,10 +15,13 @@ MessageHandler::MessageHandler(){}
 
 	void MessageHandler::sendChar(char c,  const std::shared_ptr<Connection>& con){
 					//skicka svaret
+				std::cout << "sendChar" << std::endl;
 				con->write(c);
 	}
 
 		void MessageHandler::sendInt(int answer,  const std::shared_ptr<Connection>& con){
+				std::cout << "sendInt" << std::endl;
+
 				con->write((answer >> 24) & 0xFF);
 				con->write((answer >> 16) & 0xFF);
 				con->write((answer >> 8) & 0xFF);
