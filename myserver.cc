@@ -47,7 +47,7 @@ int main (int argc, char* argv[]){
 
 void MyServer::decode(const std::shared_ptr<Connection>& con){
 	cmd = con->read();
-	//std::cout << (int)cmd << std::endl;
+	std::cout << (int)cmd << std::endl;
 	std::string answer;
 	std::string title;
 	int number = 0;
@@ -59,13 +59,7 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 		case Protocol::COM_LIST_NG : // 1
 			std::cout << "list new group" << std::endl;
 
-			std::cout <<"nbr of elements in list: " << list.size() << std::endl;
 			number = list.size();
-			std::cout << "number is: " << number << std::endl;
-
-			std::cout << list.size() << std::endl;
-			//for_each(list.begin(), list.end(), [] (Newsgroup* news) { std::cout << "size: " << news->getTitle().size() << "Title: " << news->getTitle() << std::endl;  });
-
 
 			//creating the answer
 			message.sendChar((unsigned char) Protocol::ANS_LIST_NG, con); 
@@ -81,7 +75,7 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			cmd = con->read(); // 40 for string
 			findString(con);
 			title = fromFindString;
-			std::cout << "title: " << title << std::endl;
+			//std::cout << "title: " << title << std::endl;
 			success = database->createNewsgroup(title);
 
 			message.sendChar((unsigned char)Protocol::ANS_CREATE_NG, con);
@@ -98,6 +92,7 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			std::cout << "delete newsgroup" << std::endl;
 			cmd = con->read(); // 41 for number
 			number = findNumber(con);
+			std::cout << "number from findNumber is: " << number << std::endl;
 			database->deleteNewsgroup(number);
 
 			//svara

@@ -29,7 +29,8 @@ void DatabaseRAM::createArticle(int groupid, std::string title, std::string auth
 }
 
 bool DatabaseRAM::deleteArticle(int id) {
-	auto last = remove_if(newsgroups.begin(), newsgroups.end(), [id] (News* news)->bool { if (id == news->getId()) { delete news; return true; } return false; } );
+	//auto last = remove_if(newsgroups.begin(), newsgroups.end(), [id] (News* news)->bool { if (id == news->getId()) { delete news; return true; } return false; } );
+	auto last = remove_if(newsgroups.begin(), newsgroups.end(), [id] (News* news)->bool { if (id == news->getId()) {(news->getId() == id) ? return true : return false; } );
 	newsgroups.erase(last, newsgroups.end());
 	return true;
 }
