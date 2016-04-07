@@ -62,10 +62,12 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 	std::string author;
 	std::string text;
 	int number = 0;
+	int number2 = 0;
 	auto list = database->getNewsgroups();
 	std::vector<Article*> listArt;
 	bool success = false;
 	News* newsGroup; 
+	Article* art;
 
 
 	switch((int)cmd){
@@ -190,7 +192,32 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 
 		case Protocol::COM_DELETE_ART : 
 			std::cout << "delete article" << std::endl;
-			//databas stuff
+			cmd = con->read(); // 41 for number
+			number = findNumber(con); // group id
+
+			cmd = con->read(); // 41 for number
+			number2 = findNumber(con); // article id
+
+			//create answer
+			newsGroup = database->getNewsgroup(number);
+
+			if(newsGroup != nullptr){
+				success = newsGroup->deleteArticle(number2);
+			}	
+
+			message.sendChar((unsigned char)Protocol::ANS_DELETE_ART, con);
+
+			if(success){
+				message.sendChar((unsigned char)Protocol::ANS_ACK, con);
+			}else{
+				message.sendChar((unsigned char)Protocol::ANS_NAK, con);
+				if(newsGroup != nullptr){
+					message.sendChar((unsigned char)Protocol::ERR_ART_DOES_NOT_EXIST, con);
+				}else{
+					message.sendChar((unsigned char)Protocol::ERR_NG_DOES_NOT_EXIST, con);
+				}
+			}
+			message.sendChar((unsigned char)Protocol::ANS_END, con);
 			break;		
 
 
@@ -199,7 +226,43 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 
 		case Protocol::COM_GET_ART : 
 			std::cout << "get article" << std::endl;
-			//databas stuff
+
+			cmd = con->read(); // 41 for number
+			number = findNumber(con); // group id
+
+			cmd = con->read(); // 41 for number
+			number2 = findNumber(con); // article id
+
+			newsGroup = database->getNewsgroup(number);
+			art = newsGroup->getArticle(number2);
+
+
+			message.sendChar((unsigned char)Protocol::ANS_GET_ART, con);
+
+			if(art != nullptr){
+				message.sendChar((unsigned char)Protocol::ANS_ACK, con);
+
+				message.sendChar((unsigned char)Protocol::PAR_STRING, con);
+				message.sendInt(art->getTitle().size(), con);
+				message.sendString(art->getTitle(), con);
+
+				message.sendChar((unsigned char)Protocol::PAR_STRING, con);
+				message.sendInt(art->getAuthor().size(), con);
+				message.sendString(art->getAuthor(), con);
+
+				message.sendChar((unsigned char)Protocol::PAR_STRING, con);
+				message.sendInt(art->getText().size(), con);
+				message.sendString(art->getText(), con);
+
+			}else{
+				message.sendChar((unsigned char)Protocol::ANS_NAK, con);
+				if(newsGroup != nullptr){
+					message.sendChar((unsigned char)Protocol::ERR_ART_DOES_NOT_EXIST, con);
+				}else{
+					message.sendChar((unsigned char)Protocol::ERR_NG_DOES_NOT_EXIST, con);
+				}
+			}
+			message.sendChar((unsigned char)Protocol::ANS_END, con);
 			break;
 
 
@@ -208,7 +271,7 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 
 		case Protocol::COM_END : 
 			std::cout << "command end" << std::endl;
-			//databas stuff
+			//databas stuff ?
 			break;
 	}
 	}
