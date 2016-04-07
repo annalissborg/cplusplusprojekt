@@ -54,6 +54,7 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 	auto list = database->getNewsgroups();
 	auto listArticles = NULL;
 	bool success = false;
+	News* newsGroup; 
 
 
 	switch((int)cmd){
@@ -103,7 +104,8 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			std::cout << "list articles" << std::endl;
 			cmd = con->read(); // 41 for number
 			number = findNumber(con); // nummret till newsgroupen
-			listArticles = database->getArticles(number);
+			newsGroup = database->getNewsgroup(number);
+			listArticles = newsGroup->getArticles();
 
 			// creating the answer
 			message.sendchar((unsigned char)Protocol::ANS_LIST_ART, con);
