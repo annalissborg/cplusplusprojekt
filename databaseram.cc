@@ -11,6 +11,12 @@ std::vector<Article*> Newsgroup::getArticles() {
 	return articles;
 }
 
+Article* Newsgroup::getArticle(int id) {
+	auto it = find_if(articles.begin(), articles.end(), [id] (Article* art) { return art->getId() == 0; } );
+	if (it != articles.end())
+		return *it;
+	return nullptr;
+}
 
 
 bool DatabaseRAM::createNewsgroup(std::string title) {
