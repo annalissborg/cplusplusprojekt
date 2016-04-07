@@ -247,9 +247,8 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 
 
 			if(newsGroup != nullptr){
-				std::cout << "Ska göra get article i server" << std::endl;
 				art = newsGroup->getArticle(number2);
-				std::cout << "Gjorde get article" << std::endl;
+
 				if (art == nullptr) {
 					
 					message.sendChar((unsigned char)Protocol::ANS_NAK, con);
@@ -257,29 +256,21 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 					message.sendChar((unsigned char)Protocol::ANS_END, con);
 					return;
 				}
+				
 				message.sendChar((unsigned char)Protocol::ANS_GET_ART, con);
 				message.sendChar((unsigned char)Protocol::ANS_ACK, con);
-				std::cout << "I server och skickar 1" << std::endl;
+
 				message.sendChar((unsigned char)Protocol::PAR_STRING, con);
-				std::cout << "I server och ska köra getTitle size" << std::endl;
-				art->getTitle();
-				std::cout << "I server och ska köra getTitle size" << std::endl;
-				art->getTitle().size();
-				std::cout << "I server och ska köra getTitle size" << std::endl;
 				message.sendInt(art->getTitle().size(), con);
-				std::cout << "I server och ska skicka titlen" << std::endl;
 				message.sendString(art->getTitle(), con);
-				std::cout << "I server och skickar 2" << std::endl;
 
 				message.sendChar((unsigned char)Protocol::PAR_STRING, con);
 				message.sendInt(art->getAuthor().size(), con);
 				message.sendString(art->getAuthor(), con);
-				std::cout << "I server och skickar 3" << std::endl;
 	
 				message.sendChar((unsigned char)Protocol::PAR_STRING, con);
 				message.sendInt(art->getText().size(), con);
 				message.sendString(art->getText(), con);
-				std::cout << "I server och skickar 4" << std::endl;
 				
 			}else{
 				message.sendChar((unsigned char)Protocol::ANS_NAK, con);
