@@ -4,7 +4,6 @@
 #include <dirent.h>
 #include <iostream>
 #include "database.h"
-#include "databaseram.h"
 #include <algorithm>
 #include <stdlib.h>
 #include <string.h>
@@ -183,7 +182,7 @@ std::vector<News*> DBFile::getNewsgroups() {
 	while (read != NULL) {
 		if (read->d_name[0] != '.') {
 			std::string name(read->d_name);
-			news.push_back(new Newsgroup(name, read->d_ino - inodeNbr));
+			news.push_back(new NewsFile(name, read->d_ino - inodeNbr));
 		}
 		read = readdir(dir);
 	}
@@ -243,7 +242,7 @@ News* DBFile::getNewsgroup(int id) {
 			std::string name = "news/";
 			name += read->d_name;
 			closedir(dir);
-			return (new NewsFile(name, id, id + inodeNbr));
+			return (new NewsFile(name, id));
 		}
 		read = readdir(dir);
 	}

@@ -6,7 +6,7 @@
 
 class NewsFile : public News {
 	public:
-		NewsFile(std::string folder, int id, int inodeNbr) : folder(folder), id(id)  {
+		NewsFile(std::string folder, int id) : folder(folder), id(id)  {
 		nextId = 0;
 		}
 		~NewsFile() {};
