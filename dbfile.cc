@@ -39,7 +39,7 @@ unsigned long NewsFile::findNextId() {
 		read = readdir(dir);
 	}
 	if (nid == -1)
-		nid = 0;
+		nid = 1;
 	
 	closedir(dir);
 	return id;
@@ -47,8 +47,7 @@ unsigned long NewsFile::findNextId() {
 
 void NewsFile::createArticle(std::string title, std::string author, std::string text) {
 	std::string name = folder + "/";
-	
-	struct timeval tp;
+	timeval tp;
 	gettimeofday(&tp, NULL);
 	long int ms = tp.tv_sec * 1000 + tp.tv_usec / 1000;
 	std::stringstream ss;
@@ -56,7 +55,7 @@ void NewsFile::createArticle(std::string title, std::string author, std::string 
 	name += ss.str();
 	unsigned  long id = findNextId();
 	std::ofstream file(name);
-	file << title << "\n" << author << "\n" << id << "\n";
+	file << title << "\n" << author << "\n" << id << "\n" << text; 
 	file.close();
 }
 
@@ -86,21 +85,7 @@ bool NewsFile::deleteArticle(int id) {
 		read = readdir(dir);
 	}
 	closedir(dir);
-/*
- * DIR* dir = opendir(folder.c_str());
-	if (dir == NULL)
-		return false;
-	struct dirent* read = readdir(dir);
-	while (read != NULL) {
-		if (id + inodeNbr  == read->d_ino) {
-			std::string name = folder;
-			name += "/";
-			name += read->d_name;
-			return remove(name.c_str()) == 0;
-		}
-			read = readdir(dir);
-	}
-	*/
+
 	return false;
 }
 
@@ -152,11 +137,12 @@ Article* NewsFile::getArticle(int id) {
 			std::getline(file, author);
 			std::getline(file, sid);
 			nid = std::stol(sid);
+			std::string buffer;
 			if (id == nid) {
-					while (std::getline(file, line)) {
-				text += line + "\n";
-				}
-				text = text.substr(0, text.size()-1);
+					char ch;
+				while(file.get(ch)) {
+				text.push_back(ch);
+			}
 			file.close();
 			closedir(dir);
 			return new Article(title, author, text, nid);
