@@ -3,6 +3,7 @@
 #include <string>
 #include <algorithm>
 #include "databaseram.h"
+#include "dbfile.h"
 #include "myserver.h"
 #include "messagehandler.h"
 #include "protocol.h"
@@ -10,7 +11,8 @@
 
 
 MyServer::MyServer(int port) : Server(port){
-	database = new DatabaseRAM();
+	//database = new DatabaseRAM();
+	database = new DBFile();
 }
 
 
@@ -34,7 +36,6 @@ int main (int argc, char* argv[]){
 		std::cerr << "Server not ready" << std::endl;
 		exit(1);
 	}
-	std::cout << "server is running" << std::endl;
 	while(true){
 		 auto con = server.waitForActivity();
 		if(con != nullptr){ // finns någon på denna connection
@@ -56,7 +57,6 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 		status = -1;
 	}
 	if (status >= 0) {
-	std::cout << (int)cmd << std::endl;
 	std::string answer;
 	std::string title;
 	std::string author;
@@ -72,7 +72,6 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 
 	switch((int)cmd){
 		case Protocol::COM_LIST_NG : // 1
-			std::cout << "list new group" << std::endl;
 
 			number = list.size();
 
@@ -90,11 +89,9 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 
 		case Protocol::COM_CREATE_NG : //2
 			answer = "";
-			std::cout << "create new group" << std::endl;
 			cmd = con->read(); // 40 for string
 			findString(con);
 			title = fromFindString;
-			//std::cout << "title: " << title << std::endl;
 			success = database->createNewsgroup(title);
 
 			message.sendChar((unsigned char)Protocol::ANS_CREATE_NG, con);
@@ -112,10 +109,8 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 
 
 		case Protocol::COM_DELETE_NG : // 3
-			std::cout << "delete newsgroup" << std::endl;
 			cmd = con->read(); // 41 for number
 			number = findNumber(con);
-			std::cout << "number from findNumber is: " << number << std::endl;
 			success = database->deleteNewsgroup(number);
 
 			//create answer
@@ -133,7 +128,6 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 
 
 		case Protocol::COM_LIST_ART : //4
-			std::cout << "list articles" << std::endl;
 			cmd = con->read(); // 41 for number
 			number = findNumber(con); // nummret till newsgroupen
 			newsGroup = database->getNewsgroup(number);
@@ -159,37 +153,29 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 
 
 		case Protocol::COM_CREATE_ART : //5
-			std::cout << "create article" << std::endl;
 			cmd = con->read(); // 41 for number
 			number = findNumber(con);
-				std::cout << "Creating article" << std::endl;
 
 			cmd = con->read(); // 42 for string
 			findString(con);
 			title = fromFindString;
-				std::cout << "Creating article" << std::endl;
 
 			cmd = con->read(); // 42 for string
 			findString(con);
 			author = fromFindString;
-				std::cout << "Creating article" << std::endl;
 
 			cmd = con->read(); // 42 for string
 			findString(con);
 			text = fromFindString;
-				std::cout << "Creating article" << std::endl;
 			
 			//create answer
 			newsGroup = database->getNewsgroup(number);
 
 			message.sendChar((unsigned char)Protocol::ANS_CREATE_ART, con);
 			if(newsGroup != nullptr){
-				std::cout << "Creating article" << std::endl;
 				newsGroup->createArticle(title, author, text);
-				std::cout << "Kommer förbi createArticle loopen" << std::endl;
 				message.sendChar((unsigned char)Protocol::ANS_ACK, con);
 			}else{
-				std::cout << "Couldn't create article" << std::endl;
 				message.sendChar((unsigned char)Protocol::ANS_NAK, con);
 				message.sendChar((unsigned char)Protocol::ERR_NG_DOES_NOT_EXIST, con);
 			}
@@ -200,7 +186,6 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 
 
 		case Protocol::COM_DELETE_ART : 
-			std::cout << "delete article" << std::endl;
 			cmd = con->read(); // 41 for number
 			number = findNumber(con); // group id
 
@@ -234,7 +219,6 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 
 
 		case Protocol::COM_GET_ART : 
-			std::cout << "get article" << std::endl;
 
 			cmd = con->read(); // 41 for number
 			number = findNumber(con); // group id
@@ -245,6 +229,7 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 			newsGroup = database->getNewsgroup(number);
 
 
+			message.sendChar((unsigned char)Protocol::ANS_GET_ART, con);
 
 			if(newsGroup != nullptr){
 				art = newsGroup->getArticle(number2);
@@ -257,7 +242,6 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 					return;
 				}
 				
-				message.sendChar((unsigned char)Protocol::ANS_GET_ART, con);
 				message.sendChar((unsigned char)Protocol::ANS_ACK, con);
 
 				message.sendChar((unsigned char)Protocol::PAR_STRING, con);
@@ -284,7 +268,6 @@ void MyServer::decode(const std::shared_ptr<Connection>& con){
 
 
 		case Protocol::COM_END : 
-			std::cout << "command end" << std::endl;
 			//databas stuff ?
 			break;
 	}

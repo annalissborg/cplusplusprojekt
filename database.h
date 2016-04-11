@@ -1,6 +1,6 @@
 #include <vector>
 #include <string>
-
+#include <iostream>
 #ifndef DATABASE_H
 #define DATABASE_H
 
@@ -13,14 +13,38 @@ class Article {
 		std::string getAuthor();
 		std::string getText();
 		int getId();
-	private:
+		int id;
+	bool operator < (const Article& str) const
+		{
+			std::cout << "skiten sorteras!" << std::endl;
+			return (id < str.id);
+		
+		}
+	/*
+		bool operator < (const Article* str) const
+		{
+			std::cout << "skiten sorteras!" << std::endl;
+			return (id < str->id);
+		}	
+		*/
+		private:
 		std::string title;
 		std::string author;
 		std::string text;
-		int id;
 
 };
-
+/*
+struct sort_articles
+{
+		inline bool operator() (const Article& a1, const Article& a2)
+		{
+			return ((a1).id < (a2).id);
+		}
+	*/
+//	inline bool operator() (const Article*& a1, const Article*& a2)
+	//	{
+	//		return (a1->getId() < a2->getId);
+	//	}
 
 class News {
 	public:

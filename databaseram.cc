@@ -50,10 +50,8 @@ News* DatabaseRAM::getNewsgroup(std::string title) {
 	return nullptr;
 }
 News* DatabaseRAM::getNewsgroup(int id) {
-	std::cout << "To find id:" << id << std::endl;
 	auto it = find_if(newsgroups.begin(), newsgroups.end(), [id] (News* news)->bool { std::cout << news->getId(); return id == news->getId(); } );
 	if (it != newsgroups.end()) {
-		std::cout << "fond group" << std::endl;
 		return *it;
 	}
 	return nullptr;
