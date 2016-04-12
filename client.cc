@@ -47,6 +47,7 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 	std::string command = "";
 	input >> command;
 	std::cout << std::endl;
+	int number = -1; //To be used for various commands
 	if(command == "group-list") {
 		message.sendChar((unsigned char) Protocol::COM_LIST_NG, con);
 		message.sendChar((unsigned char) Protocol::COM_END, con);
@@ -65,7 +66,13 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 	}
 	else if (command == "use") {
 		input >> grpNbr;
-		}
+	}
+	else if (command == "list-articles") {
+		
+	}
+	else if (command == "read") {
+		
+	}
 	else
 		std::cerr << "Unknown command" << std::endl;
 		
