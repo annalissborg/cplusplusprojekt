@@ -1,4 +1,3 @@
-#include "client.h"
 #include <iostream>
 #include "connection.h"
 #include "protocol.h"
@@ -68,10 +67,60 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 		input >> grpNbr;
 	}
 	else if (command == "list-articles") {
-		
+		message.sendChar((unsigned char) Protocol::COM_LIST_ART, con);
+		message.sendChar((unsigned char) Protocol::PAR_NUM, con);
+		message.sendInt(grpNbr, con);
+		message.sendChar((unsigned char) Protocol::COM_END, con);
+
+		con->read();
+		unsigned char ack = con->read();
+		if (ack == Protocol::ANS_ACK) {
+			con->read();
+			int nbr = findNumber(con);
+			for(int i = 0; i < nbr; ++i) {
+				con->read();
+				int artNbr = findNumber(con);
+				con->read();
+				std::string name = findString(con);
+				std::cout << artNbr << ") " << name << std::endl;
+			}
+		}
+		else {
+			std::cout << "Faild to list articles" << std::endl;
+			con->read();
+		}
+		con->read();
+
+
 	}
 	else if (command == "read") {
-		
+		input >> number;
+		std::cout << "Reading article number: " << number << std::endl;
+		message.sendChar((unsigned char) Protocol::COM_GET_ART, con);
+		message.sendChar((unsigned char) Protocol::PAR_NUM, con);
+		message.sendInt(grpNbr, con);
+		message.sendChar((unsigned char) Protocol::PAR_NUM, con);
+		message.sendInt(number, con);
+		message.sendChar((unsigned char) Protocol::COM_END, con);
+	
+		//read input
+		//
+		con->read();
+		unsigned char ack = con->read();
+		if (ack == Protocol::ANS_ACK) {
+			std::cout << "Article found!" << std::endl;
+			ack = con->read();
+			while(ack == Protocol::PAR_STRING) {
+				std::string text = findString(con);
+				std::cout << text << std::endl;
+				ack = con->read();
+			}
+		}
+		else {
+			std::cout << "Failed to read article" << std::endl;
+			con->read();
+		}
+		con->read();
 	}
 	else
 		std::cerr << "Unknown command" << std::endl;
