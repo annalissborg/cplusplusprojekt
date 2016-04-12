@@ -65,6 +65,7 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 			name = findString(con);
 			std::cout << id << ") " << name << std::endl;
 		}
+	con->read();
 	}
 	else if (command == "use") {
 		input >> grpNbr;
@@ -146,10 +147,26 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 
 		}
 	}
+	else if (command == "delete-ng") {
+		input >> number;
+		message.sendChar((unsigned int) Protocol::COM_DELETE_NG, con);
+		message.sendChar((unsigned int) Protocol::PAR_NUM, con);
+		message.sendInt(number, con);
+		message.sendChar((unsigned int) Protocol::COM_END, con);
+
+		con->read();
+		response = con->read();
+		if (response == Protocol::ANS_ACK)
+			std::cout << "Newsgroup removed" << std::endl;
+		else
+			std::cout << "Failed to remove newsgroup" << std::endl;
+		
+
+	con->read();
+	}
 	else
 		std::cerr << "Unknown command" << std::endl;
 	
-	con->read();
 	return false;
 }
 
