@@ -134,13 +134,10 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 		message.sendString(title, con); 
 		message.sendChar((unsigned char) Protocol::COM_END, con);
 
-		std::cout << "innan read answer " << std::endl;
 
 		con->read();	
-		std::cout << "innan read response " << std::endl;
-
-		response = findNumber(con);
-		std::cout << "response:  " << response << std::endl;
+		
+		response = con->read();
 
 		if(response == Protocol::ANS_ACK){
 			std::cout << "The newsgroup named " << title << " has been created." << std::endl;
@@ -151,7 +148,8 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 	}
 	else
 		std::cerr << "Unknown command" << std::endl;
-		
+	
+	con->read();
 	return false;
 }
 
