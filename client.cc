@@ -48,6 +48,8 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 	input >> command;
 	std::cout << std::endl;
 	unsigned char response;
+	std::string auhtor;
+	std::string text;
 	std::string title = ""; //To be used for various commands
 	int number = -1; //To be used for various commands
 	if(command == "list-groups") {
@@ -127,7 +129,7 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 		con->read();
 	}
 	else if (command == "createng") {
-		input >> title;
+		std::getline(input, title);
 		std::cout << "titel: " << title << std::endl;
 		message.sendChar((unsigned char) Protocol::COM_CREATE_NG, con);
 		message.sendChar((unsigned char)Protocol::PAR_STRING, con);
@@ -137,14 +139,59 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 
 
 		con->read();	
-		
+
+		std::cout << "innan read response " << std::endl;
+
 		response = con->read();
+		std::cout << "response:  " << response << std::endl;
+		
 
 		if(response == Protocol::ANS_ACK){
 			std::cout << "The newsgroup named " << title << " has been created." << std::endl;
 		} else{
 			std::cout << "The newsgroup named " << title << " has NOT been created." << std::endl;
+			response = con->read();
+		}
+	}
+		else if (command == "createart") {
+		input >> number;
+		std::getline(input, title);
+		std::getline(input, auhtor);
+		std::getline(input, text);
 
+		message.sendChar((unsigned char) Protocol::COM_CREATE_ART, con);
+
+		message.sendChar((unsigned char)Protocol::PAR_NUM, con);
+		message.sendInt(number, con); 
+
+		message.sendChar((unsigned char)Protocol::PAR_STRING, con);
+		message.sendInt(title.size(), con); 
+		message.sendString(title, con); 
+
+		message.sendChar((unsigned char)Protocol::PAR_STRING, con);
+		message.sendInt(auhtor.size(), con); 
+		message.sendString(auhtor, con); 
+
+		message.sendChar((unsigned char)Protocol::PAR_STRING, con);
+		message.sendInt(text.size(), con); 
+		message.sendString(text, con); 
+
+		message.sendChar((unsigned char) Protocol::COM_END, con);
+
+
+		con->read();	
+
+		std::cout << "innan read response " << std::endl;
+
+		response = con->read();
+		std::cout << "response:  " << response << std::endl;
+		
+
+		if(response == Protocol::ANS_ACK){
+			std::cout << "The Article named " << title << " has been created." << std::endl;
+		} else{
+			std::cout << "The Article named " << title << " has NOT been created." << std::endl;
+			response = con->read();
 		}
 	}
 	else if (command == "delete-ng") {
