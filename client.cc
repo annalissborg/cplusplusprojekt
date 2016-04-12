@@ -45,7 +45,8 @@ int main(int argc, char* argv[]) {
 bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &grpNbr) {
 	MessageHandler message;
 	std::string command = "";
-	input >> command;
+	getline(input, command);
+	//	input >> command;
 	std::cout << std::endl;
 	unsigned char response;
 	std::string auhtor;
@@ -121,6 +122,7 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 				std::cout << text << std::endl;
 				ack = con->read();
 			}
+			ack = con->read();
 		}
 		else {
 			std::cout << "Failed to read article" << std::endl;
@@ -152,6 +154,7 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 			std::cout << "The newsgroup named " << title << " has NOT been created." << std::endl;
 			response = con->read();
 		}
+		con->read();
 	}
 		else if (command == "createart") {
 		input >> number;
@@ -193,6 +196,7 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 			std::cout << "The Article named " << title << " has NOT been created." << std::endl;
 			response = con->read();
 		}
+		response = con->read();
 	}
 	else if (command == "delete-ng") {
 		input >> number;
