@@ -139,7 +139,7 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 		con->read();	
 		std::cout << "innan read response " << std::endl;
 
-		response = findNumber(con);
+		response = con->read();
 		std::cout << "response:  " << response << std::endl;
 
 		if(response == Protocol::ANS_ACK){
