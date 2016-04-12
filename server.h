@@ -62,7 +62,7 @@ protected:
 	int my_socket;
 	
 	/* List of registered connections */
-	std::vector<std::shared_ptr<Connection>> connections;
+	std::vector<std::shared_ptr<Connection> > connections;
 	
 	/* Socket for a connection waiting to be registered */
 	mutable int pending_socket;

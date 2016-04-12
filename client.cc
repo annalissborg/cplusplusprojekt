@@ -1,5 +1,5 @@
-#include "client.h"
 #include <iostream>
+#include <string>
 #include "connection.h"
 #include "protocol.h"
 #include "messagehandler.h"
@@ -47,8 +47,10 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 	std::string command = "";
 	input >> command;
 	std::cout << std::endl;
+	unsigned char response;
+	std::string title = ""; //To be used for various commands
 	int number = -1; //To be used for various commands
-	if(command == "group-list") {
+	if(command == "list-groups") {
 		message.sendChar((unsigned char) Protocol::COM_LIST_NG, con);
 		message.sendChar((unsigned char) Protocol::COM_END, con);
 		
@@ -68,10 +70,47 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 		input >> grpNbr;
 	}
 	else if (command == "list-articles") {
+		message.sendChar((unsigned char) Protocol::COM_LIST_ART, con);
+		message.sendChar((unsigned char) Protocol::COM_END, con);
 		
+		con->read();
+		con->read();
+		int nbrOfGroups = findNumber(con);
+		std::string name = "";
+		for (int i = 0; i != nbrOfGroups; ++i) {
+			con->read();
+			int id = findNumber(con);
+			con->read();
+			name = findString(con);
+			std::cout << id << ") " << name << std::endl;
+		}
 	}
 	else if (command == "read") {
 		
+	}
+	else if (command == "createng") {
+		input >> title;
+		std::cout << "titel: " << title << std::endl;
+		message.sendChar((unsigned char) Protocol::COM_CREATE_NG, con);
+		message.sendChar((unsigned char)Protocol::PAR_STRING, con);
+		message.sendInt(title.size(), con); 
+		message.sendString(title, con); 
+		message.sendChar((unsigned char) Protocol::COM_END, con);
+
+		std::cout << "innan read answer " << std::endl;
+
+		con->read();	
+		std::cout << "innan read response " << std::endl;
+
+		response = findNumber(con);
+		std::cout << "response:  " << response << std::endl;
+
+		if(response == Protocol::ANS_ACK){
+			std::cout << "The newsgroup named " << title << " has been created." << std::endl;
+		} else{
+			std::cout << "The newsgroup named " << title << " has NOT been created." << std::endl;
+
+		}
 	}
 	else
 		std::cerr << "Unknown command" << std::endl;

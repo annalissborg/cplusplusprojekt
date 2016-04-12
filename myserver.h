@@ -14,7 +14,6 @@ public:
 	void decode(const std::shared_ptr<Connection>& con);
 
 private:
-	void sendResponse(std::string answer, const std::shared_ptr<Connection>& con);
 	void findString(const std::shared_ptr<Connection>& con);
 	int findNumber(const std::shared_ptr<Connection>& con);
 	std::string fromFindString;
