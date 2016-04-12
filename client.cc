@@ -157,7 +157,6 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 		con->read();
 	}
 		else if (command == "createart") {
-		input >> number;
 		std::getline(input, title);
 		std::getline(input, auhtor);
 		std::getline(input, text);
@@ -165,7 +164,7 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 		message.sendChar((unsigned char) Protocol::COM_CREATE_ART, con);
 
 		message.sendChar((unsigned char)Protocol::PAR_NUM, con);
-		message.sendInt(number, con); 
+		message.sendInt(grpNbr, con); 
 
 		message.sendChar((unsigned char)Protocol::PAR_STRING, con);
 		message.sendInt(title.size(), con); 
