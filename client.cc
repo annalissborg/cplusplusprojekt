@@ -4,7 +4,7 @@
 #include "protocol.h"
 #include "messagehandler.h"
 
-bool executeCommand(std::istream& input, std::shared_ptr<Connection>);
+bool executeCommand(std::istream& input, std::shared_ptr<Connection>, int &grpNbr);
 int findNumber(const std::shared_ptr<Connection>& con);
 std::string findString(const std::shared_ptr<Connection>& con);
 
@@ -31,8 +31,9 @@ int main(int argc, char* argv[]) {
 	}
 	std::cout << "Connected to server" << std::endl;
 	std::string input = "";
+	int grpNbr = -1;
 	while(true) {
-		executeCommand(std::cin, con);
+		executeCommand(std::cin, con, grpNbr);
 		input = "";
 	}
 
@@ -41,7 +42,7 @@ int main(int argc, char* argv[]) {
 }
 
 
-bool executeCommand(std::istream& input, std::shared_ptr<Connection> con) {
+bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &grpNbr) {
 	MessageHandler message;
 	std::string command = "";
 	input >> command;
@@ -62,6 +63,9 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con) {
 			std::cout << id << ") " << name << std::endl;
 		}
 	}
+	else if (command == "use") {
+		input >> grpNbr;
+		}
 	else
 		std::cerr << "Unknown command" << std::endl;
 		
