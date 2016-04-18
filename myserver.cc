@@ -11,8 +11,8 @@
 
 
 MyServer::MyServer(int port) : Server(port){
-	//database = new DatabaseRAM();
-	database = new DBFile();
+	database = new DatabaseRAM();
+//	database = new DBFile();
 }
 
 

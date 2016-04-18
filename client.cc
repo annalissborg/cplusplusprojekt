@@ -111,7 +111,15 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 		con->read();
 	}
 	else if (command == "3") {
-		input >> number;
+		std::string tmp;
+		input >> tmp;
+		try {
+			number = std::stoi(tmp);
+		}
+			catch(std::exception& e) {
+			std::cout << "Du måste ange ett giltligt nummer" << std::endl;
+			return false;
+		}
 		message.sendChar((unsigned int) Protocol::COM_DELETE_NG, con);
 		message.sendChar((unsigned int) Protocol::PAR_NUM, con);
 		message.sendInt(number, con);
@@ -130,7 +138,16 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 	}
 
 	else if (command == "4") {
-		input >> number;
+			std::string tmp;
+		input >> tmp;
+		try {
+			number = std::stoi(tmp);
+		}
+			catch(std::exception& e) {
+			std::cout << "Du måste ange ett giltligt nummer" << std::endl;
+			return false;
+		}
+
 		message.sendChar((unsigned char) Protocol::COM_LIST_ART, con);
 		message.sendChar((unsigned char) Protocol::PAR_NUM, con);
 		message.sendInt(number, con);
@@ -158,8 +175,17 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 
 	}
 	else if (command == "5") {
-		input >> number;
-		std::getline(input, title);
+		std::string tmp;
+		input >> tmp;
+		try {
+			number = std::stoi(tmp);
+		}
+			catch(std::exception& e) {
+			std::cout << "Du måste ange ett giltligt nummer" << std::endl;
+			return false;
+		}
+			
+			std::getline(input, title);
 		std::cout << title << std::endl;
 		std::getline(input, auhtor);
 		std::cout << auhtor << std::endl;
@@ -202,8 +228,23 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 	}
 	else if (command == "6") {
 		int group;
-		input >> group;
-		input >> number;
+		std::string tmp1, tmp2;
+		input >> tmp1;
+		try {
+			group = std::stoi(tmp1);
+		}
+			catch(std::exception& e) {
+			std::cout << "Du måste ange ett giltligt nummer" << std::endl;
+			return false;
+		}
+		input >> tmp2;
+		try {
+			number = std::stoi(tmp2);
+		}
+			catch(std::exception& e) {
+			std::cout << "Du måste ange ett giltligt nummer" << std::endl;
+			return false;
+		}
 		message.sendChar((unsigned int) Protocol::COM_DELETE_ART, con);
 		message.sendChar((unsigned int) Protocol::PAR_NUM, con);
 		message.sendInt(group, con);
@@ -218,16 +259,31 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 		}
 		else {
 			std::cout << "Failed to delete the article" << std::endl;
-			con->read();
+				con->read();
 		}
 		con->read();
 	}
-//Nogt er fucked
+	//Nogt er fucked
 	else if (command == "7") {
 		int group;
-		input >> group;
-		input >> number;
-		std::cout << "Reading article number: " << number << std::endl;
+		std::string tmp1, tmp2;
+		input >> tmp1;
+		try {
+			group = std::stoi(tmp1);
+		}
+			catch(std::exception& e) {
+			std::cout << "Du måste ange ett giltligt nummer" << std::endl;
+			return false;
+		}
+		input >> tmp2;
+		try {
+			number = std::stoi(tmp2);
+		}
+			catch(std::exception& e) {
+			std::cout << "Du måste ange ett giltligt nummer" << std::endl;
+			return false;
+		}
+			std::cout << "Reading article number: " << number << std::endl;
 		message.sendChar((unsigned char) Protocol::COM_GET_ART, con);
 		message.sendChar((unsigned char) Protocol::PAR_NUM, con);
 		message.sendInt(group, con);
@@ -258,9 +314,11 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 	else if (command == "q") {
 		exit(0);
 	}
-	else
-	printManual();
-	
+	else {
+		std::string remove;
+		std::getline(input, remove);
+		//printManual();
+	}
 	return false;
 }
 

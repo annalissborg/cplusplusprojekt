@@ -31,6 +31,7 @@ unsigned long NewsFile::findNextId() {
 			std::getline(file, title);
 			std::getline(file, author);
 			std::getline(file, sid);
+			std::cout << "Stol 2" << std::endl;
 			nid = std::stol(sid);
 			if (nid >= id)
 				id = nid + 1;
@@ -73,6 +74,7 @@ bool NewsFile::deleteArticle(int id) {
 			std::getline(file, title);
 			std::getline(file, author);
 			std::getline(file, sid);
+			std::cout << "stol3" << std::endl;
 			nid = std::stol(sid);
 			if (id == nid) {
 				file.close();
@@ -104,6 +106,7 @@ std::vector<Article*> NewsFile::getArticles() {
 			std::getline(file, title);
 			std::getline(file, author);
 			std::getline(file, sid);
+			std::cout << "stol4" << std::endl;
 			nid = std::stol(sid);
 				articles.push_back(new Article(title, "", "", nid));	
 		}
@@ -135,6 +138,7 @@ Article* NewsFile::getArticle(int id) {
 			std::getline(file, title);
 			std::getline(file, author);
 			std::getline(file, sid);
+			std::cout << "stol1" << std::endl;
 			nid = std::stol(sid);
 			std::string buffer;
 			if (id == nid) {
