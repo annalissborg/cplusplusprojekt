@@ -16,10 +16,12 @@ class NewsFile : public News {
 		bool deleteArticle(int id); 
 		std::vector<Article*> getArticles();
 		Article* getArticle(int id);
+
 	private:
-		unsigned long findNextId();
+		long findNextId();
+		void incrementNextId();
 		std::string folder;
-		int id;
+		long id;
 		int inodeNbr;
 		unsigned int nextId;
 };
@@ -32,6 +34,8 @@ class DBFile : public Database {
 		bool deleteNewsgroup(int id);
 		News* getNewsgroup(int id);
 		News* getNewsgroup(std::string title);
+		void saveInfo(std::vector<News*>);
+		long findNextId();
 	private:
 		unsigned int inodeNbr;
 		unsigned int nextId;
