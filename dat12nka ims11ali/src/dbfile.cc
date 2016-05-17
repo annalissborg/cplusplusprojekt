@@ -257,7 +257,6 @@ bool DBFile::deleteNewsgroup(int id) {
 	for (int i = 0; i < news.size(); ++i) {
 		if (news[i]->getId() == id ) {
 			std::string path = "news/" + news[i]->getTitle();
-			std::cout << "Slänger " << path << std::endl;
 			news.erase(news.begin() + i);
 			saveInfo(news);
 			DIR* dir = opendir(path.c_str());
@@ -269,7 +268,6 @@ bool DBFile::deleteNewsgroup(int id) {
 				std::string name = path;
 				name += "/";
 				name += read->d_name;
-				std::cout << "Removing file:" << name << std::endl;
 				remove(name.c_str());
 			}
 			read = readdir(dir);

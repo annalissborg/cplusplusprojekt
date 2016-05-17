@@ -131,6 +131,7 @@ bool executeCommand(std::istream& input, std::shared_ptr<Connection> con, int &g
 			std::cout << "Newsgroup removed" << std::endl;
 		else {
 			std::cout << "Failed to remove newsgroup" << std::endl;
+			con->read();
 		}
 		
 
